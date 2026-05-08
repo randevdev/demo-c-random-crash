@@ -1,6 +1,6 @@
 # demo-c-random-crash
 
-A tiny C program that crashes intermittently. Designed as a 2min demo
+A tiny C program that crashes intermittently. Designed as a 2-min demo
 for [neverbreak.ai](https://neverbreak.ai).
 
 ## What it does

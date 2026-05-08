@@ -8,10 +8,9 @@
 #define NUM_ROUNDS 12
 #define INTERVAL_SEC 10
 
-/* Delayed crash state */
+/* Previous round state */
 static int g_prev_num = -1;
 static int g_prev_round = 0;
-static int g_prev_was_bad = 0;
 
 int process_number(int round, int num) {
     int is_even = (num % 2 == 0);
@@ -25,27 +24,7 @@ int process_number(int round, int num) {
         fclose(fp);
     }
 
-    if (g_prev_was_bad) {
-        printf("  Round %2d/%d: num = %3d  *** CRASHING: previous round %d had bad value %d ***\n",
-               round, NUM_ROUNDS, num, g_prev_round, g_prev_num);
-        fflush(stdout);
-
-        int *p = NULL;
-        *p = g_prev_num;
-        return -1;
-    }
-
-    if (round >= 7 && !g_prev_was_bad) {
-        num = 58;
-        is_even = 1;
-        in_range = 1;
-    }
-    if (round > 4 && is_even && in_range) {
-        printf("  Round %2d/%d: num = %3d  *** BUG DETECTED (crash next round) ***\n",
-               round, NUM_ROUNDS, num);
-        fflush(stdout);
-        g_prev_was_bad = 1;
-    } else {
+    {
         const char *why_ok = "";
         if (round <= 4 && is_even && in_range)
             why_ok = " (warmup round, crash disabled)";
